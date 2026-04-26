@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Krushi AI Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <link rel="stylesheet" href="landing.css"/>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- ADMIN LOGIN PAGE -->
+<div class="auth-page" style="display:flex">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="logo"><i class='bx bxs-shield-alt-2'></i></div>
+      <span>Krushi <b>AI Care</b></span>
+    </div>
+    <h2>Admin Portal<br>Access 🔐</h2>
+    <p>Secure admin panel to manage users, monitor system health, view analytics, and control platform settings.</p>
+    <ul class="auth-perks">
+      <li><i class='bx bx-check-circle'></i> User management & analytics</li>
+      <li><i class='bx bx-check-circle'></i> System health monitoring</li>
+      <li><i class='bx bx-check-circle'></i> Dataset & model overview</li>
+      <li><i class='bx bx-check-circle'></i> Scan history insights</li>
+    </ul>
+    <div class="admin-creds">
+      <p class="creds-title"><i class='bx bx-info-circle'></i> Default Credentials</p>
+      <p><strong>Username:</strong> admin</p>
+      <p><strong>Password:</strong> admin123</p>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-box">
+      <div class="admin-shield">
+        <i class='bx bxs-shield-alt-2'></i>
+      </div>
+      <h3>Admin Login</h3>
+      <p class="auth-sub">Enter your admin credentials to continue</p>
+      <div class="field">
+        <label>Username</label>
+        <div class="input-row">
+          <i class='bx bx-user-circle'></i>
+          <input type="text" id="admin-user" placeholder="admin" value="admin"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-row">
+          <i class='bx bx-lock'></i>
+          <input type="password" id="admin-pass" placeholder="••••••••" value="admin123"/>
+        </div>
+      </div>
+      <div class="err" id="admin-err"></div>
+      <button class="btn-auth" onclick="doAdminLogin()">
+        <i class='bx bx-log-in'></i> Access Admin Panel
+      </button>
+      <button class="btn-back" onclick="window.location.href='index.html'">
+        <i class='bx bx-arrow-back'></i> Back to Home
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Redirect if already logged in as admin (must run immediately)
+const adminSession = localStorage.getItem('kac_admin_session');
+if (adminSession) {
+  window.location.href = 'admin-dashboard.html';
+}
+
+// Default admin credentials
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
+
+function doAdminLogin() {
+  const user = document.getElementById('admin-user').value.trim();
+  const pass = document.getElementById('admin-pass').value;
+  const err = document.getElementById('admin-err');
+
+  if (!user || !pass) {
+    err.textContent = 'All fields are required.';
+    return;
+  }
+
+  if (user !== ADMIN_USER || pass !== ADMIN_PASS) {
+    err.textContent = 'Invalid admin credentials.';
+    return;
+  }
+
+  // Set admin session
+  localStorage.setItem('kac_admin_session', JSON.stringify({ user, loginTime: new Date().toISOString() }));
+  window.location.href = 'admin-dashboard.html';
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doAdminLogin();
+});
+</script>
+</body>
+</html>

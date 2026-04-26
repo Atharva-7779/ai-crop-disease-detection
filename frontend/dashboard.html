@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Krushi AI Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <link rel="stylesheet" href="chatbot.css"/>
+  <script src="translations.js"></script>
+  <script src="fertilizer-data.js"></script>
+</head>
+<body class="dash-body">
+
+<!-- BG -->
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="side-brand">
+    <div class="logo"><i class='bx bxs-leaf'></i></div>
+    <span>Krushi <b>AI Care</b></span>
+  </div>
+  
+  <nav class="side-nav">
+    <a href="#" class="side-link active" data-tab="detect">
+      <i class='bx bx-scan'></i> <span data-i18n="detectDisease">Detect Disease</span>
+    </a>
+    <a href="#" class="side-link" data-tab="history">
+      <i class='bx bx-history'></i> <span data-i18n="scanHistory">Scan History</span>
+    </a>
+    <a href="#" class="side-link" data-tab="fertilizer">
+      <i class='bx bxs-flask'></i> <span data-i18n="fertilizerRecommendation">Fertilizer Guide</span>
+    </a>
+    <a href="#" class="side-link" data-tab="crops">
+      <i class='bx bxs-leaf'></i> <span data-i18n="supportedCrops">Supported Crops</span>
+    </a>
+    <a href="weather.html" class="side-link">
+      <i class='bx bx-cloud'></i> <span>Weather</span>
+    </a>
+  </nav>
+
+  <div class="side-user">
+    <div class="user-av" id="userAv">A</div>
+    <div class="user-info">
+      <strong id="userName">User</strong>
+      <span id="userEmail">user@email.com</span>
+    </div>
+    <button class="logout-btn" onclick="logout()" title="Logout">
+      <i class='bx bx-log-out'></i>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="dash-main">
+  
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <h2 id="tabTitle" data-i18n="detectDisease">Detect Disease</h2>
+      <p id="tabSub" data-i18n="uploadSubtitle">Upload a leaf image to get instant diagnosis</p>
+    </div>
+    <div class="topbar-right">
+      <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')" id="lang-en">EN</button>
+        <button class="lang-btn" onclick="setLanguage('hi')" id="lang-hi">हिं</button>
+        <button class="lang-btn" onclick="setLanguage('mr')" id="lang-mr">मर</button>
+      </div>
+      <div class="status-badge" id="statusBadge">
+        <span class="sdot" id="statusDot"></span>
+        <span id="statusText" data-i18n="checking">Checking...</span>
+      </div>
+      <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class='bx bx-menu'></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB: DETECT -->
+  <div class="tab-panel" id="tab-detect">
+    <div class="detect-card">
+      
+      <!-- Upload Options -->
+      <div class="upload-options">
+        <button class="option-btn active" id="uploadBtn" onclick="switchMode('upload')">
+          <i class='bx bx-cloud-upload'></i> <span data-i18n="uploadImage">Upload Image</span>
+        </button>
+        <button class="option-btn" id="cameraBtn" onclick="switchMode('camera')">
+          <i class='bx bx-camera'></i> <span data-i18n="liveCamera">Live Camera</span>
+        </button>
+      </div>
+
+      <!-- Upload Mode -->
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept="image/*" hidden/>
+        <div class="upload-empty" id="uploadEmpty">
+          <div class="upload-icon"><i class='bx bx-cloud-upload'></i></div>
+          <p class="upload-title" data-i18n="dropImage">Drop your leaf image here</p>
+          <p class="upload-sub"><span data-i18n="browseFiles">browse files</span> · <span data-i18n="jpgPngSupported">JPG, PNG supported</span></p>
+          <p class="upload-warn"><i class='bx bx-info-circle'></i> <span data-i18n="onlySupported">⚠️ AI model currently supports disease detection for Tomato, Potato, and Pepper only. Information for Wheat, Sugarcane, and Cotton is available in the Fertilizer Guide section.</span></p>
+        </div>
+        <div class="upload-img" id="uploadImg" hidden>
+          <img id="previewImg" src="" alt="preview"/>
+          <div class="img-overlay">
+            <i class='bx bx-refresh'></i> <span data-i18n="changeImage">Change Image</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Camera Mode -->
+      <div class="camera-zone" id="cameraZone" hidden>
+        <video id="cameraVideo" autoplay playsinline></video>
+        <canvas id="cameraCanvas" hidden></canvas>
+        <div class="camera-controls">
+          <button class="camera-capture" id="captureBtn" onclick="capturePhoto()">
+            <i class='bx bx-camera'></i> <span data-i18n="capturePhoto">Capture Photo</span>
+          </button>
+          <button class="camera-stop" onclick="stopCamera()">
+            <i class='bx bx-x'></i> <span data-i18n="stopCamera">Stop Camera</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Analyze Button -->
+      <button class="analyze-btn" id="analyzeBtn" disabled>
+        <span class="btn-txt"><i class='bx bx-analyse'></i> <span data-i18n="analyzeDisease">Analyze Disease</span></span>
+        <span class="btn-load" hidden><i class='bx bx-loader-alt bx-spin'></i> <span data-i18n="analyzing">Analyzing...</span></span>
+      </button>
+
+      <!-- Result -->
+      <div class="result-box" id="resultBox" hidden>
+        <div class="result-head">
+          <div class="result-ico" id="resultIco">
+            <i class='bx bx-shield-quarter'></i>
+          </div>
+          <div>
+            <p class="result-lbl" data-i18n="detectedDisease">Detected Disease</p>
+            <h3 id="diseaseName"></h3>
+          </div>
+        </div>
+        <div class="result-conf">
+          <div class="conf-row">
+            <span data-i18n="confidence">Confidence</span>
+            <strong id="confText"></strong>
+          </div>
+          <div class="conf-bg">
+            <div class="conf-fill" id="confFill"></div>
+          </div>
+        </div>
+        
+        <div class="result-section" id="symptomsSection">
+          <div class="section-title">
+            <i class='bx bx-error-circle'></i> <span data-i18n="commonSymptoms">Common Symptoms</span>
+          </div>
+          <ul class="symptom-list" id="symptomsList"></ul>
+        </div>
+
+        <div class="result-section" id="treatmentSection">
+          <div class="section-title">
+            <i class='bx bx-plus-medical'></i> <span data-i18n="recommendedTreatment">Recommended Treatment</span>
+          </div>
+          <ol class="treatment-steps" id="treatmentSteps"></ol>
+        </div>
+
+        <div class="result-section" id="preventionSection">
+          <div class="section-title">
+            <i class='bx bx-shield-check'></i> <span data-i18n="preventionTips">Prevention Tips</span>
+          </div>
+          <ul class="prevention-list" id="preventionList"></ul>
+        </div>
+
+        <div class="result-section" id="fertilizerSection">
+          <div class="section-title">
+            <i class='bx bxs-flask'></i> <span data-i18n="fertilizerGuide">Fertilizer Guide</span>
+          </div>
+          <div class="fertilizer-guide">
+            <div class="fert-card">
+              <div class="fert-header">
+                <i class='bx bxs-package'></i>
+                <span data-i18n="productName">Product Name</span>
+              </div>
+              <p id="fertName"></p>
+            </div>
+            <div class="fert-card">
+              <div class="fert-header">
+                <i class='bx bx-droplet'></i>
+                <span data-i18n="dosage">Dosage</span>
+              </div>
+              <p id="fertDosage"></p>
+            </div>
+            <div class="fert-card">
+              <div class="fert-header">
+                <i class='bx bx-time'></i>
+                <span data-i18n="frequency">Frequency</span>
+              </div>
+              <p id="fertFrequency"></p>
+            </div>
+            <div class="fert-card full-width">
+              <div class="fert-header">
+                <i class='bx bx-info-circle'></i>
+                <span data-i18n="applicationMethod">Application Method</span>
+              </div>
+              <p id="fertMethod"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-section" id="recoverySection">
+          <div class="section-title">
+            <i class='bx bx-time-five'></i> <span data-i18n="expectedRecovery">Expected Recovery Time</span>
+          </div>
+          <p id="recoveryText"></p>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="error-box" id="errorBox" hidden>
+        <i class='bx bx-error-circle'></i>
+        <span id="errorText"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: HISTORY -->
+  <div class="tab-panel" id="tab-history" hidden>
+    <div class="history-top">
+      <p id="historyCount" class="history-cnt"></p>
+      <button class="clear-btn" onclick="clearHistory()">
+        <i class='bx bx-trash'></i> <span data-i18n="clearAll">Clear All</span>
+      </button>
+    </div>
+    <div id="historyList" class="history-list"></div>
+    <div id="historyEmpty" class="history-empty" hidden>
+      <i class='bx bx-image-alt'></i>
+      <p data-i18n="noScansYet">No scans yet. Go to Detect Disease to get started!</p>
+    </div>
+  </div>
+
+  <!-- TAB: FERTILIZER -->
+  <div class="tab-panel" id="tab-fertilizer" hidden>
+    <div class="fert-search-bar">
+      <i class='bx bx-search'></i>
+      <input type="text" id="fertSearch" placeholder="Search crops, diseases, or fertilizers..." />
+    </div>
+
+    <div class="fert-categories">
+      <button class="fert-cat-btn active" data-category="all">All Crops</button>
+      <button class="fert-cat-btn" data-category="vegetables">🥬 Vegetables</button>
+      <button class="fert-cat-btn" data-category="fruits">🍎 Fruits</button>
+      <button class="fert-cat-btn" data-category="flowers">🌸 Flowers</button>
+      <button class="fert-cat-btn" data-category="trees">🌳 Trees</button>
+    </div>
+
+    <div class="fert-crops-grid" id="fertCropsGrid"></div>
+    
+    <div class="fert-disease-section" id="fertDiseaseSection" hidden>
+      <button class="fert-back-btn" onclick="backToCrops()"><i class='bx bx-arrow-back'></i> Back to Crops</button>
+      <h3 id="fertCropTitle"></h3>
+      <div class="fert-diseases-grid" id="fertDiseasesGrid"></div>
+    </div>
+
+    <div class="fert-recommendation-section" id="fertRecommendationSection" hidden>
+      <button class="fert-back-btn" onclick="backToDiseases()"><i class='bx bx-arrow-back'></i> Back to Diseases</button>
+      <div class="fert-rec-card">
+        <div class="fert-rec-header">
+          <div class="fert-rec-icon" id="fertRecIcon"></div>
+          <div>
+            <p class="fert-rec-label">Disease Information</p>
+            <h3 id="fertRecDiseaseName"></h3>
+          </div>
+        </div>
+        <p class="fert-rec-desc" id="fertRecDiseaseDesc"></p>
+        
+        <div class="fert-rec-section">
+          <h4><i class='bx bxs-flask'></i> Recommended Fertilizers</h4>
+          <div id="fertRecList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CROPS -->
+  <div class="tab-panel" id="tab-crops" hidden>
+    <div class="crops-header">
+      <h3>Supported Crops & Disease Information</h3>
+      <p class="crops-subtitle">AI detection available for Tomato, Potato & Pepper. Fertilizer guide available for all crops.</p>
+    </div>
+
+    <div class="crops-grid">
+      <!-- Detection Enabled Crops -->
+      <div class="ccard detection-enabled">
+        <div class="crop-badge detection-badge">✔ Detection Available</div>
+        <div class="crop-image" style="background-image: url('https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=300&fit=crop');"></div>
+        <div class="crop-content">
+          <div class="cemoji">🍅</div>
+          <h4>Tomato</h4>
+          <p class="crop-desc">AI-powered disease detection</p>
+          <ul>
+            <li>Bacterial Spot</li><li>Early Blight</li><li>Late Blight</li>
+            <li>Leaf Mold</li><li>Septoria Leaf Spot</li><li>Spider Mites</li>
+            <li>Target Spot</li><li>Yellow Leaf Curl Virus</li><li>Mosaic Virus</li>
+            <li class="healthy">Healthy ✓</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ccard detection-enabled">
+        <div class="crop-badge detection-badge">✔ Detection Available</div>
+        <div class="crop-image" style="background-image: url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&h=300&fit=crop');"></div>
+        <div class="crop-content">
+          <div class="cemoji">🥔</div>
+          <h4>Potato</h4>
+          <p class="crop-desc">AI-powered disease detection</p>
+          <ul>
+            <li>Early Blight</li><li>Late Blight</li>
+            <li class="healthy">Healthy ✓</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ccard detection-enabled">
+        <div class="crop-badge detection-badge">✔ Detection Available</div>
+        <div class="crop-image" style="background-image: url('https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400&h=300&fit=crop');"></div>
+        <div class="crop-content">
+          <div class="cemoji">🫑</div>
+          <h4>Pepper (Bell)</h4>
+          <p class="crop-desc">AI-powered disease detection</p>
+          <ul>
+            <li>Bacterial Spot</li>
+            <li class="healthy">Healthy ✓</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Info Only Crops -->
+      <div class="ccard info-only">
+        <div class="crop-badge info-badge">ℹ️ Info Only</div>
+        <div class="crop-image" style="background-image: url('https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=300&fit=crop');"></div>
+        <div class="crop-content">
+          <div class="cemoji">🌾</div>
+          <h4>Wheat</h4>
+          <p class="crop-desc">Fertilizer guide available</p>
+          <ul>
+            <li>Rust (Yellow/Brown/Black)</li><li>Powdery Mildew</li>
+            <li>Leaf Blight</li><li>Loose Smut</li>
+          </ul>
+          <button class="view-guide-btn" onclick="viewFertilizerGuide('wheat')">
+            <i class='bx bxs-flask'></i> View Fertilizer Guide
+          </button>
+        </div>
+      </div>
+
+      <div class="ccard info-only">
+        <div class="crop-badge info-badge">ℹ️ Info Only</div>
+        <div class="crop-image" style="background-image: url('https://images.unsplash.com/photo-1583484962917-a1c5c8b3f8e0?w=400&h=300&fit=crop');"></div>
+        <div class="crop-content">
+          <div class="cemoji">🌿</div>
+          <h4>Sugarcane</h4>
+          <p class="crop-desc">Fertilizer guide available</p>
+          <ul>
+            <li>Red Rot</li><li>Smut</li><li>Rust</li>
+          </ul>
+          <button class="view-guide-btn" onclick="viewFertilizerGuide('sugarcane')">
+            <i class='bx bxs-flask'></i> View Fertilizer Guide
+          </button>
+        </div>
+      </div>
+
+      <div class="ccard info-only">
+        <div class="crop-badge info-badge">ℹ️ Info Only</div>
+        <div class="crop-image" style="background-image: url('https://images.unsplash.com/photo-1615485500834-bc10199bc727?w=400&h=300&fit=crop');"></div>
+        <div class="crop-content">
+          <div class="cemoji">☁️</div>
+          <h4>Cotton</h4>
+          <p class="crop-desc">Fertilizer guide available</p>
+          <ul>
+            <li>Leaf Curl Virus</li><li>Bacterial Blight</li>
+            <li>Fusarium Wilt</li><li>Root Rot</li>
+          </ul>
+          <button class="view-guide-btn" onclick="viewFertilizerGuide('cotton')">
+            <i class='bx bxs-flask'></i> View Fertilizer Guide
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="crops-info-box">
+      <div class="info-icon">⚠️</div>
+      <div>
+        <h4>Important Information</h4>
+        <p>AI model currently supports disease detection for <strong>Tomato, Potato, and Pepper</strong> only. For Wheat, Sugarcane, and Cotton, please visit the <strong>Fertilizer Guide</strong> section for comprehensive disease information and treatment recommendations.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="dashboard.js"></script>
+<script src="chatbot.js"></script>
+</body>
+</html>

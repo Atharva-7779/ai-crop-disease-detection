@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krushi AI Care - Crop Disease Detection</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <script src="translations.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .container {
+      max-width: 400px;
+      width: 90%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo i {
+      font-size: 60px;
+      color: #22c55e;
+    }
+    h1 {
+      text-align: center;
+      margin: 10px 0 30px;
+      font-size: 28px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #22c55e;
+    }
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #22c55e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      background: #16a34a;
+      transform: translateY(-2px);
+    }
+    .toggle {
+      text-align: center;
+      margin-top: 20px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .toggle a {
+      color: #22c55e;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .toggle a:hover {
+      text-decoration: underline;
+    }
+    .quick-access {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .quick-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      margin: 5px;
+      transition: all 0.3s;
+    }
+    .quick-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    #signUpForm {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <i class='bx bxs-leaf'></i>
+    </div>
+    <h1>Krushi AI Care</h1>
+    
+    <!-- Sign In Form -->
+    <form id="signInForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signInEmail" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signInPassword" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn">Sign In</button>
+      <div class="toggle">
+        Don't have an account? <a href="#" onclick="toggleForms(); return false;">Sign Up</a>
+      </div>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signUpForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signUpName" placeholder="Enter your name" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signUpEmail" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signUpPassword" placeholder="Create a password" required>
+      </div>
+      <button type="submit" class="btn">Sign Up</button>
+      <div class="toggle">
+        Already have an account? <a href="#" onclick="toggleForms(); return false;">Sign In</a>
+      </div>
+    </form>
+
+    <!-- Quick Access -->
+    <div class="quick-access">
+      <p style="margin-bottom: 10px; font-size: 14px;">Quick Access:</p>
+      <a href="#" onclick="quickSignIn(); return false;" class="quick-btn">
+        <i class='bx bx-user'></i> Demo User
+      </a>
+      <a href="landing.html" class="quick-btn">
+        <i class='bx bx-home'></i> Back to Home
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Auth Guard: Check if already logged in
+    const session = JSON.parse(localStorage.getItem('kac_session') || 'null');
+    if (session) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Toggle between sign in and sign up
+    function toggleForms() {
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+      
+      if (signInForm.style.display === 'none') {
+        signInForm.style.display = 'block';
+        signUpForm.style.display = 'none';
+      } else {
+        signInForm.style.display = 'none';
+        signUpForm.style.display = 'block';
+      }
+    }
+
+    // Quick sign in with demo user
+    function quickSignIn() {
+      const session = {
+        email: 'demo@krishiaicare.com',
+        name: 'Demo User'
+      };
+      localStorage.setItem('kac_session', JSON.stringify(session));
+      window.location.href = 'dashboard.html';
+    }
+
+    // Sign In
+    document.getElementById('signInForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('signInEmail').value;
+      const password = document.getElementById('signInPassword').value;
+      
+      const users = JSON.parse(localStorage.getItem('kac_users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        const session = {
+          email: user.email,
+          name: user.name
+        };
+        localStorage.setItem('kac_session', JSON.stringify(session));
+        window.location.href = 'dashboard.html';
+      } else {
+        alert('Invalid email or password!');
+      }
+    });
+
+    // Sign Up
+    document.getElementById('signUpForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('signUpName').value;
+      const email = document.getElementById('signUpEmail').value;
+      const password = document.getElementById('signUpPassword').value;
+      
+      const users = JSON.parse(localStorage.getItem('kac_users') || '[]');
+      
+      // Check if user already exists
+      if (users.find(u => u.email === email)) {
+        alert('User already exists! Please sign in.');
+        return;
+      }
+      
+      // Add new user
+      users.push({ name, email, password });
+      localStorage.setItem('kac_users', JSON.stringify(users));
+      
+      // Auto sign in
+      const session = { email, name };
+      localStorage.setItem('kac_session', JSON.stringify(session));
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krushi AI Care - AI-Powered Crop Disease Detection</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <link rel="stylesheet" href="landing.css"/>
+  <link rel="stylesheet" href="chatbot.css"/>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <i class='bx bxs-leaf'></i>
+      <span>Krushi <b>AI Care</b></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#crops">Crops</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="admin-login.html" class="admin-nav-link">🛡️ Admin</a></li>
+    </ul>
+    <div class="nav-btns" id="navBtns">
+      <button class="btn-signin" id="signInBtn" onclick="window.location.href='auth.html'">Sign In</button>
+      <button class="btn-signup" id="signUpBtn" onclick="window.location.href='auth.html'">Sign Up</button>
+      <button class="btn-signup" id="dashboardBtn" onclick="window.location.href='dashboard.html'" style="display:none;">Go to Dashboard</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-text">
+      <div class="badge">
+        <i class='bx bx-shield-quarter'></i>
+        AI-Powered Detection
+      </div>
+      <h1>
+        Protect Your Crops with <span class="green-text">AI Technology</span>
+      </h1>
+      <p>
+        Detect crop diseases instantly using advanced deep learning. Upload a leaf image and get accurate diagnosis with treatment recommendations in seconds.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-signup big" onclick="window.location.href='auth.html'">
+          <i class='bx bx-rocket'></i>
+          Start Detection
+        </button>
+        <a href="#about" class="btn-outline-big">
+          <i class='bx bx-info-circle'></i>
+          Learn More
+        </a>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <strong>23+</strong>
+          <span>Diseases</span>
+        </div>
+        <div class="sdiv"></div>
+        <div class="stat">
+          <strong>6</strong>
+          <span>Crops</span>
+        </div>
+        <div class="sdiv"></div>
+        <div class="stat">
+          <strong>86%</strong>
+          <span>Accuracy</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <i class='bx bxs-leaf leaf-big'></i>
+        <div class="scanline"></div>
+      </div>
+      <div class="ring r1">
+        <div class="rdot"></div>
+      </div>
+      <div class="ring r2">
+        <div class="rdot"></div>
+      </div>
+      <div class="fbadge fb1">
+        <i class='bx bx-check-circle'></i>
+        Healthy
+      </div>
+      <div class="fbadge fb2">
+        <i class='bx bx-error-circle'></i>
+        Disease Detected
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-icons">
+        <div class="ai-cell green">
+          <i class='bx bx-brain'></i>
+        </div>
+        <div class="ai-cell">
+          <i class='bx bx-leaf'></i>
+        </div>
+        <div class="ai-cell">
+          <i class='bx bx-camera'></i>
+        </div>
+        <div class="ai-cell green">
+          <i class='bx bx-shield-quarter'></i>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="chip">
+          <i class='bx bx-info-circle'></i>
+          About Us
+        </div>
+        <h2>AI-Driven Crop Disease Detection System</h2>
+        <p>
+          Our platform uses advanced deep learning (ResNet18) to detect crop diseases from leaf images. 
+          Trained on thousands of images, our model provides instant, accurate diagnosis with detailed 
+          treatment recommendations, fertilizer guides, and recovery timelines.
+        </p>
+        <ul class="check-list">
+          <li><i class='bx bx-check-circle'></i> Instant disease detection from leaf images</li>
+          <li><i class='bx bx-check-circle'></i> Detailed symptoms and treatment plans</li>
+          <li><i class='bx bx-check-circle'></i> Fertilizer recommendations with dosage</li>
+          <li><i class='bx bx-check-circle'></i> Multi-language support (English, Hindi, Marathi)</li>
+          <li><i class='bx bx-check-circle'></i> Scan history tracking</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features">
+    <div class="sec-head">
+      <div class="chip">
+        <i class='bx bx-star'></i>
+        Features
+      </div>
+      <h2>Powerful Features for Farmers</h2>
+      <p>Everything you need to protect your crops</p>
+    </div>
+    <div class="cards4">
+      <div class="fcard" style="--ic: #22c55e">
+        <div class="ficon">
+          <i class='bx bx-camera'></i>
+        </div>
+        <h4>Upload or Capture</h4>
+        <p>Upload leaf images or use your camera to capture photos directly</p>
+      </div>
+      <div class="fcard" style="--ic: #3b82f6">
+        <div class="ficon">
+          <i class='bx bx-brain'></i>
+        </div>
+        <h4>AI Detection</h4>
+        <p>Advanced ResNet18 model trained on 20,000+ images for accurate diagnosis</p>
+      </div>
+      <div class="fcard" style="--ic: #f59e0b">
+        <div class="ficon">
+          <i class='bx bx-first-aid'></i>
+        </div>
+        <h4>Treatment Plans</h4>
+        <p>Get detailed treatment steps, prevention tips, and recovery timelines</p>
+      </div>
+      <div class="fcard" style="--ic: #8b5cf6">
+        <div class="ficon">
+          <i class='bx bx-droplet'></i>
+        </div>
+        <h4>Fertilizer Guide</h4>
+        <p>Comprehensive fertilizer recommendations with dosage and application methods</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Crops Section -->
+  <section class="crops" id="crops">
+    <div class="sec-head">
+      <div class="chip">
+        <i class='bx bx-leaf'></i>
+        Supported Crops
+      </div>
+      <h2>6 Crops, 23 Diseases</h2>
+      <p>Comprehensive disease detection across major crops</p>
+    </div>
+    <div class="crops-grid">
+      <div class="ccard">
+        <div class="cemoji">🍅</div>
+        <h4>Tomato</h4>
+        <ul>
+          <li>Early Blight</li>
+          <li>Late Blight</li>
+          <li>Bacterial Spot</li>
+          <li>Leaf Mold</li>
+          <li>Septoria Leaf Spot</li>
+          <li>Spider Mites</li>
+          <li>Target Spot</li>
+          <li>Yellow Leaf Curl Virus</li>
+          <li>Mosaic Virus</li>
+          <li class="healthy">Healthy</li>
+        </ul>
+      </div>
+      <div class="ccard">
+        <div class="cemoji">🥔</div>
+        <h4>Potato</h4>
+        <ul>
+          <li>Early Blight</li>
+          <li>Late Blight</li>
+          <li class="healthy">Healthy</li>
+        </ul>
+      </div>
+      <div class="ccard">
+        <div class="cemoji">🌶️</div>
+        <h4>Pepper</h4>
+        <ul>
+          <li>Bacterial Spot</li>
+          <li class="healthy">Healthy</li>
+        </ul>
+      </div>
+      <div class="ccard">
+        <div class="cemoji">🌾</div>
+        <h4>Wheat</h4>
+        <ul>
+          <li>Rust</li>
+          <li>Septoria Leaf Spot</li>
+          <li class="healthy">Healthy</li>
+        </ul>
+      </div>
+      <div class="ccard">
+        <div class="cemoji">🎋</div>
+        <h4>Sugarcane</h4>
+        <ul>
+          <li>Bacterial Blight</li>
+          <li>Red Rot</li>
+          <li class="healthy">Healthy</li>
+        </ul>
+      </div>
+      <div class="ccard">
+        <div class="cemoji">🌱</div>
+        <h4>Cotton</h4>
+        <ul>
+          <li>Bacterial Blight</li>
+          <li>Fusarium Wilt</li>
+          <li class="healthy">Healthy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="crops-warn">
+      <i class='bx bx-info-circle'></i>
+      <span>Model trained on PlantVillage dataset with 86.18% validation accuracy</span>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section>
+    <div class="sec-head">
+      <div class="chip">
+        <i class='bx bx-cog'></i>
+        How It Works
+      </div>
+      <h2>Simple 4-Step Process</h2>
+      <p>Get results in seconds</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="snum">STEP 1</div>
+        <div class="sicon">
+          <i class='bx bx-user-plus'></i>
+        </div>
+        <h4>Sign Up</h4>
+        <p>Create your free account</p>
+      </div>
+      <i class='bx bx-right-arrow-alt sarrow'></i>
+      <div class="step">
+        <div class="snum">STEP 2</div>
+        <div class="sicon">
+          <i class='bx bx-upload'></i>
+        </div>
+        <h4>Upload Image</h4>
+        <p>Upload or capture leaf photo</p>
+      </div>
+      <i class='bx bx-right-arrow-alt sarrow'></i>
+      <div class="step">
+        <div class="snum">STEP 3</div>
+        <div class="sicon">
+          <i class='bx bx-brain'></i>
+        </div>
+        <h4>AI Analysis</h4>
+        <p>Get instant diagnosis</p>
+      </div>
+      <i class='bx bx-right-arrow-alt sarrow'></i>
+      <div class="step">
+        <div class="snum">STEP 4</div>
+        <div class="sicon">
+          <i class='bx bx-first-aid'></i>
+        </div>
+        <h4>Get Treatment</h4>
+        <p>Follow recommendations</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <i class='bx bxs-leaf'></i>
+      <span>Krushi <b>AI Care</b></span>
+    </div>
+    <p>AI-Powered Crop Disease Detection System</p>
+    <p>Protecting crops with advanced deep learning technology</p>
+    <p class="copy">© 2024 Krushi AI Care. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Check if user is already logged in
+    const session = JSON.parse(localStorage.getItem('kac_session') || 'null');
+    if (session) {
+      // Show Dashboard button, hide Sign In/Sign Up
+      document.getElementById('signInBtn').style.display = 'none';
+      document.getElementById('signUpBtn').style.display = 'none';
+      document.getElementById('dashboardBtn').style.display = 'block';
+    }
+  </script>
+  <script src="chatbot.js"></script>
+</body>
+</html>

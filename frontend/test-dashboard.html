@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test - Krushi AI Care</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 { margin-bottom: 20px; color: #22c55e; }
+        .status {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            text-align: left;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status-item:last-child { border-bottom: none; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .btn:hover { background: #16a34a; }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Dashboard Test</h1>
+        
+        <div class="status" id="status">
+            <div class="status-item">
+                <span>Session Status:</span>
+                <strong id="sessionStatus">Checking...</strong>
+            </div>
+            <div class="status-item">
+                <span>User Name:</span>
+                <strong id="userName">-</strong>
+            </div>
+            <div class="status-item">
+                <span>User Email:</span>
+                <strong id="userEmail">-</strong>
+            </div>
+            <div class="status-item">
+                <span>CSS Files:</span>
+                <strong id="cssStatus">Checking...</strong>
+            </div>
+            <div class="status-item">
+                <span>JS Files:</span>
+                <strong id="jsStatus">Checking...</strong>
+            </div>
+        </div>
+
+        <button class="btn" onclick="createDemoSession()">Create Demo Session</button>
+        <button class="btn" onclick="goToDashboard()">Go to Dashboard</button>
+        <button class="btn btn-secondary" onclick="clearSession()">Clear Session</button>
+        <button class="btn btn-secondary" onclick="location.reload()">Refresh Test</button>
+    </div>
+
+    <script>
+        function checkStatus() {
+            // Check session
+            const session = localStorage.getItem('kac_session');
+            const sessionStatus = document.getElementById('sessionStatus');
+            const userName = document.getElementById('userName');
+            const userEmail = document.getElementById('userEmail');
+            
+            if (session) {
+                const parsed = JSON.parse(session);
+                sessionStatus.innerHTML = '<span class="success">✓ Active</span>';
+                userName.textContent = parsed.name;
+                userEmail.textContent = parsed.email;
+            } else {
+                sessionStatus.innerHTML = '<span class="error">✗ No Session</span>';
+                userName.textContent = 'Not logged in';
+                userEmail.textContent = 'Not logged in';
+            }
+
+            // Check CSS files
+            fetch('common.css')
+                .then(res => {
+                    if (res.ok) {
+                        return fetch('dashboard.css');
+                    }
+                    throw new Error('common.css not found');
+                })
+                .then(res => {
+                    if (res.ok) {
+                        document.getElementById('cssStatus').innerHTML = '<span class="success">✓ Found</span>';
+                    } else {
+                        throw new Error('dashboard.css not found');
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('cssStatus').innerHTML = '<span class="error">✗ Missing</span>';
+                });
+
+            // Check JS files
+            fetch('dashboard.js')
+                .then(res => {
+                    if (res.ok) {
+                        return fetch('translations.js');
+                    }
+                    throw new Error('dashboard.js not found');
+                })
+                .then(res => {
+                    if (res.ok) {
+                        document.getElementById('jsStatus').innerHTML = '<span class="success">✓ Found</span>';
+                    } else {
+                        throw new Error('translations.js not found');
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('jsStatus').innerHTML = '<span class="error">✗ Missing</span>';
+                });
+        }
+
+        function createDemoSession() {
+            const session = {
+                email: 'demo@krishiaicare.com',
+                name: 'Demo User'
+            };
+            localStorage.setItem('kac_session', JSON.stringify(session));
+            alert('✓ Demo session created!');
+            checkStatus();
+        }
+
+        function goToDashboard() {
+            const session = localStorage.getItem('kac_session');
+            if (!session) {
+                alert('⚠️ Please create a session first!');
+                return;
+            }
+            window.location.href = 'dashboard.html';
+        }
+
+        function clearSession() {
+            localStorage.removeItem('kac_session');
+            alert('✓ Session cleared!');
+            checkStatus();
+        }
+
+        // Check on load
+        checkStatus();
+    </script>
+</body>
+</html>

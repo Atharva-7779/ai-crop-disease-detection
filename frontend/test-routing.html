@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Session - Krushi AI Care</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .clear-btn {
+            background: #ef4444;
+            color: white;
+        }
+        .test-btn {
+            background: #22c55e;
+            color: white;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Routing Flow</h1>
+        
+        <div class="info">
+            <h3>Current Session Status:</h3>
+            <p id="sessionStatus">Checking...</p>
+        </div>
+
+        <button class="clear-btn" onclick="clearSession()">
+            🗑️ Clear Session (Logout)
+        </button>
+        
+        <button class="test-btn" onclick="testFlow()">
+            ✅ Test Landing Page
+        </button>
+
+        <div class="info" style="margin-top: 30px; text-align: left;">
+            <h3>Expected Flow:</h3>
+            <ol>
+                <li>Click "Clear Session" to logout</li>
+                <li>Click "Test Landing Page"</li>
+                <li>You should see Sign Up/Sign In forms</li>
+                <li>Sign up or use "Demo User" button</li>
+                <li>You should be redirected to Dashboard</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function checkSession() {
+            const session = JSON.parse(localStorage.getItem('kac_session') || 'null');
+            const statusEl = document.getElementById('sessionStatus');
+            
+            if (session) {
+                statusEl.innerHTML = `
+                    <strong style="color: #22c55e;">✅ Logged In</strong><br>
+                    Name: ${session.name}<br>
+                    Email: ${session.email}
+                `;
+            } else {
+                statusEl.innerHTML = '<strong style="color: #ef4444;">❌ Not Logged In</strong>';
+            }
+        }
+
+        function clearSession() {
+            localStorage.removeItem('kac_session');
+            alert('Session cleared! You are now logged out.');
+            checkSession();
+        }
+
+        function testFlow() {
+            window.location.href = 'landing.html';
+        }
+
+        // Check session on load
+        checkSession();
+    </script>
+</body>
+</html>

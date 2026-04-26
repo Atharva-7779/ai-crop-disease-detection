@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Migration Helper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #0a0f0d;
+      color: #fff;
+    }
+    .container {
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    h1 { color: #22c55e; }
+    button {
+      background: #22c55e;
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover { background: #16a34a; }
+    .info {
+      background: rgba(34,197,94,0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 3px solid #22c55e;
+    }
+    .success {
+      background: rgba(34,197,94,0.2);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      color: #22c55e;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 Krushi AI Care - Data Migration Helper</h1>
+    
+    <div class="info">
+      <strong>Why do I need this?</strong><br>
+      When you switch from opening files directly (file://) to using a local server (http://localhost:3000), 
+      your browser treats them as different origins. This means your previous login data and scan history 
+      are stored separately.
+    </div>
+
+    <h2>Option 1: Create Fresh Account (Recommended)</h2>
+    <p>Start fresh with a new account on localhost:3000</p>
+    <button onclick="window.location.href='index.html'">Go to Sign Up Page</button>
+
+    <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.1);">
+
+    <h2>Option 2: View Current Data</h2>
+    <p>See what data is currently stored in your browser:</p>
+    <button onclick="showCurrentData()">Show Current Data</button>
+    <div id="currentData"></div>
+
+    <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.1);">
+
+    <h2>Option 3: Create Test Data</h2>
+    <p>Add sample users and scan history for testing:</p>
+    <button onclick="createTestData()">Create Test Data</button>
+    <div id="testDataResult"></div>
+
+    <hr style="margin: 30px 0; border-color: rgba(255,255,255,0.1);">
+
+    <h2>Option 4: Clear All Data</h2>
+    <p>Remove all stored data and start fresh:</p>
+    <button onclick="clearAllData()" style="background: #ef4444;">Clear All Data</button>
+    <div id="clearResult"></div>
+  </div>
+
+  <script>
+    function showCurrentData() {
+      const users = JSON.parse(localStorage.getItem('kac_users') || '[]');
+      const session = JSON.parse(localStorage.getItem('kac_session') || 'null');
+      const history = JSON.parse(localStorage.getItem('kac_history') || '[]');
+      const adminSession = JSON.parse(localStorage.getItem('kac_admin_session') || 'null');
+
+      const html = `
+        <div class="info" style="margin-top: 15px;">
+          <strong>Users:</strong> ${users.length} registered<br>
+          <strong>Current Session:</strong> ${session ? session.email : 'Not logged in'}<br>
+          <strong>Scan History:</strong> ${history.length} scans<br>
+          <strong>Admin Session:</strong> ${adminSession ? 'Logged in' : 'Not logged in'}
+        </div>
+        <textarea readonly>${JSON.stringify({users, session, history, adminSession}, null, 2)}</textarea>
+      `;
+      document.getElementById('currentData').innerHTML = html;
+    }
+
+    function createTestData() {
+      // Create test users
+      const testUsers = [
+        { name: 'Test Farmer', email: 'farmer@test.com', password: '123456' },
+        { name: 'Demo User', email: 'demo@test.com', password: '123456' },
+        { name: 'John Doe', email: 'john@test.com', password: '123456' }
+      ];
+
+      localStorage.setItem('kac_users', JSON.stringify(testUsers));
+
+      // Create test scan history
+      const testHistory = [
+        {
+          disease: 'Tomato_Early_blight',
+          confidence: 87.5,
+          symptoms: ['Brown spots', 'Yellowing leaves'],
+          treatment: ['Remove infected leaves', 'Apply fungicide'],
+          prevention: ['Crop rotation', 'Proper spacing'],
+          fertilizer: { name: 'Mancozeb 75% WP', dosage: '2.5g/L', frequency: 'Every 7-10 days', method: 'Foliar spray' },
+          recovery_time: '3-4 weeks',
+          image: null,
+          date: new Date().toLocaleString(),
+          user: 'farmer@test.com'
+        },
+        {
+          disease: 'Potato___Late_blight',
+          confidence: 92.3,
+          symptoms: ['Dark lesions', 'White fuzzy growth'],
+          treatment: ['Apply systemic fungicide', 'Remove infected plants'],
+          prevention: ['Use resistant varieties', 'Monitor weather'],
+          fertilizer: { name: 'Metalaxyl + Mancozeb', dosage: '2.5g/L', frequency: 'Every 5-7 days', method: 'Complete coverage spray' },
+          recovery_time: 'Very difficult to recover',
+          image: null,
+          date: new Date().toLocaleString(),
+          user: 'farmer@test.com'
+        }
+      ];
+
+      localStorage.setItem('kac_history', JSON.stringify(testHistory));
+
+      document.getElementById('testDataResult').innerHTML = `
+        <div class="success">
+          ✅ Test data created successfully!<br><br>
+          <strong>Test Accounts:</strong><br>
+          • farmer@test.com / 123456<br>
+          • demo@test.com / 123456<br>
+          • john@test.com / 123456<br><br>
+          <strong>Admin Account:</strong><br>
+          • admin / admin123<br><br>
+          <button onclick="window.location.href='index.html'">Go to Login Page</button>
+        </div>
+      `;
+    }
+
+    function clearAllData() {
+      if (!confirm('Are you sure you want to clear ALL data? This cannot be undone!')) {
+        return;
+      }
+
+      localStorage.removeItem('kac_users');
+      localStorage.removeItem('kac_session');
+      localStorage.removeItem('kac_history');
+      localStorage.removeItem('kac_admin_session');
+      localStorage.removeItem('kac_language');
+
+      document.getElementById('clearResult').innerHTML = `
+        <div class="success">
+          ✅ All data cleared successfully!<br>
+          <button onclick="window.location.reload()">Refresh Page</button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

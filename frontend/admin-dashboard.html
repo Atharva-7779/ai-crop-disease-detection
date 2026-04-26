@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Krushi AI Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <link rel="stylesheet" href="admin.css"/>
+</head>
+<body class="dash-body">
+
+<!-- BG -->
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar admin-sidebar" id="sidebar">
+  <div class="side-brand">
+    <div class="logo admin-logo"><i class='bx bxs-shield-alt-2'></i></div>
+    <span>Admin <b>Panel</b></span>
+  </div>
+  
+  <nav class="side-nav">
+    <a href="#" class="side-link active" data-tab="overview">
+      <i class='bx bx-grid-alt'></i> Overview
+    </a>
+    <a href="#" class="side-link" data-tab="users">
+      <i class='bx bx-user'></i> Users
+    </a>
+    <a href="#" class="side-link" data-tab="scans">
+      <i class='bx bx-scan'></i> All Scans
+    </a>
+    <a href="#" class="side-link" data-tab="dataset">
+      <i class='bx bxs-data'></i> Dataset Info
+    </a>
+    <a href="#" class="side-link" data-tab="system">
+      <i class='bx bx-server'></i> System Health
+    </a>
+  </nav>
+
+  <div class="side-user">
+    <div class="user-av admin-av">A</div>
+    <div class="user-info">
+      <strong>Admin</strong>
+      <span>Administrator</span>
+    </div>
+    <button class="logout-btn" onclick="adminLogout()" title="Logout">
+      <i class='bx bx-log-out'></i>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="dash-main">
+  
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <h2 id="tabTitle">Overview</h2>
+      <p id="tabSub">System statistics and quick insights</p>
+    </div>
+    <div class="topbar-right">
+      <div class="status-badge" id="statusBadge">
+        <span class="sdot" id="statusDot"></span>
+        <span id="statusText">Checking...</span>
+      </div>
+      <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class='bx bx-menu'></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div class="tab-panel" id="tab-overview">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="--ic:#4ade80"><i class='bx bx-user'></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Total Users</p>
+          <h3 id="totalUsers">0</h3>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--ic:#60a5fa"><i class='bx bx-scan'></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Total Scans</p>
+          <h3 id="totalScans">0</h3>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--ic:#f472b6"><i class='bx bxs-data'></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Dataset Images</p>
+          <h3>23,548</h3>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--ic:#fb923c"><i class='bx bx-leaf'></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Supported Crops</p>
+          <h3>6</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h4><i class='bx bx-trending-up'></i> Recent Activity</h4>
+        <div id="recentActivity" class="activity-list"></div>
+      </div>
+      <div class="admin-card">
+        <h4><i class='bx bx-pie-chart-alt-2'></i> Disease Distribution</h4>
+        <div id="diseaseChart" class="chart-area"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: USERS -->
+  <div class="tab-panel" id="tab-users" hidden>
+    <div class="table-header">
+      <p id="userCount" class="table-count"></p>
+      <button class="clear-btn" onclick="clearAllUsers()">
+        <i class='bx bx-trash'></i> Clear All Users
+      </button>
+    </div>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Scans</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTable"></tbody>
+      </table>
+    </div>
+    <div id="usersEmpty" class="empty-state" hidden>
+      <i class='bx bx-user-x'></i>
+      <p>No users registered yet</p>
+    </div>
+  </div>
+
+  <!-- TAB: SCANS -->
+  <div class="tab-panel" id="tab-scans" hidden>
+    <div class="table-header">
+      <p id="scanCount" class="table-count"></p>
+      <button class="clear-btn" onclick="clearAllScans()">
+        <i class='bx bx-trash'></i> Clear All Scans
+      </button>
+    </div>
+    <div id="scansList" class="scans-list"></div>
+    <div id="scansEmpty" class="empty-state" hidden>
+      <i class='bx bx-image-alt'></i>
+      <p>No scans performed yet</p>
+    </div>
+  </div>
+
+  <!-- TAB: DATASET -->
+  <div class="tab-panel" id="tab-dataset" hidden>
+    <div class="dataset-info">
+      <div class="dataset-card">
+        <h4><i class='bx bxs-data'></i> Dataset Overview</h4>
+        <div class="dataset-stats">
+          <div class="ds-row">
+            <span>Training Images:</span>
+            <strong>18,838</strong>
+          </div>
+          <div class="ds-row">
+            <span>Validation Images:</span>
+            <strong>4,710</strong>
+          </div>
+          <div class="ds-row">
+            <span>Total Images:</span>
+            <strong>23,548</strong>
+          </div>
+          <div class="ds-row">
+            <span>Disease Classes:</span>
+            <strong>23</strong>
+          </div>
+          <div class="ds-row">
+            <span>Supported Crops:</span>
+            <strong>6 (Tomato, Potato, Pepper, Wheat, Sugarcane, Cotton)</strong>
+          </div>
+          <div class="ds-row">
+            <span>Model Architecture:</span>
+            <strong>ResNet18 (Transfer Learning)</strong>
+          </div>
+          <div class="ds-row">
+            <span>Training Epochs:</span>
+            <strong>5</strong>
+          </div>
+          <div class="ds-row">
+            <span>Training Accuracy:</span>
+            <strong>85.38%</strong>
+          </div>
+          <div class="ds-row">
+            <span>Validation Accuracy:</span>
+            <strong>86.18%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="dataset-card">
+        <h4><i class='bx bx-leaf'></i> Supported Crops & Diseases</h4>
+        <div class="crops-list">
+          <div class="crop-item">
+            <div class="crop-head">
+              <span class="crop-emoji">🍅</span>
+              <strong>Tomato</strong>
+              <span class="crop-count">10 diseases</span>
+            </div>
+            <ul class="disease-list">
+              <li>Bacterial Spot</li>
+              <li>Early Blight</li>
+              <li>Late Blight</li>
+              <li>Leaf Mold</li>
+              <li>Septoria Leaf Spot</li>
+              <li>Spider Mites</li>
+              <li>Target Spot</li>
+              <li>Yellow Leaf Curl Virus</li>
+              <li>Mosaic Virus</li>
+              <li class="healthy">Healthy ✓</li>
+            </ul>
+          </div>
+          <div class="crop-item">
+            <div class="crop-head">
+              <span class="crop-emoji">🥔</span>
+              <strong>Potato</strong>
+              <span class="crop-count">3 diseases</span>
+            </div>
+            <ul class="disease-list">
+              <li>Early Blight</li>
+              <li>Late Blight</li>
+              <li class="healthy">Healthy ✓</li>
+            </ul>
+          </div>
+          <div class="crop-item">
+            <div class="crop-head">
+              <span class="crop-emoji">🫑</span>
+              <strong>Pepper (Bell)</strong>
+              <span class="crop-count">2 diseases</span>
+            </div>
+            <ul class="disease-list">
+              <li>Bacterial Spot</li>
+              <li class="healthy">Healthy ✓</li>
+            </ul>
+          </div>
+          <div class="crop-item">
+            <div class="crop-head">
+              <span class="crop-emoji">🌾</span>
+              <strong>Wheat</strong>
+              <span class="crop-count">3 diseases</span>
+            </div>
+            <ul class="disease-list">
+              <li>Rust</li>
+              <li>Septoria Leaf Spot</li>
+              <li class="healthy">Healthy ✓</li>
+            </ul>
+          </div>
+          <div class="crop-item">
+            <div class="crop-head">
+              <span class="crop-emoji">🎋</span>
+              <strong>Sugarcane</strong>
+              <span class="crop-count">3 diseases</span>
+            </div>
+            <ul class="disease-list">
+              <li>Bacterial Blight</li>
+              <li>Red Rot</li>
+              <li class="healthy">Healthy ✓</li>
+            </ul>
+          </div>
+          <div class="crop-item">
+            <div class="crop-head">
+              <span class="crop-emoji">☁️</span>
+              <strong>Cotton</strong>
+              <span class="crop-count">3 diseases</span>
+            </div>
+            <ul class="disease-list">
+              <li>Bacterial Blight</li>
+              <li>Fusarium Wilt</li>
+              <li class="healthy">Healthy ✓</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SYSTEM -->
+  <div class="tab-panel" id="tab-system" hidden>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="sys-header">
+          <h4><i class='bx bx-server'></i> Backend Status</h4>
+          <span class="sys-badge" id="backendStatus">Checking...</span>
+        </div>
+        <div class="sys-info">
+          <div class="sys-row">
+            <span>API Endpoint:</span>
+            <code>http://localhost:8000</code>
+          </div>
+          <div class="sys-row">
+            <span>Model Status:</span>
+            <strong id="modelStatus">Checking...</strong>
+          </div>
+          <div class="sys-row">
+            <span>Framework:</span>
+            <strong>Flask + PyTorch</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="system-card">
+        <div class="sys-header">
+          <h4><i class='bx bx-chip'></i> Model Information</h4>
+        </div>
+        <div class="sys-info">
+          <div class="sys-row">
+            <span>Architecture:</span>
+            <strong>ResNet18 (Transfer Learning)</strong>
+          </div>
+          <div class="sys-row">
+            <span>Input Size:</span>
+            <strong>224x224 RGB</strong>
+          </div>
+          <div class="sys-row">
+            <span>Output Classes:</span>
+            <strong>23</strong>
+          </div>
+          <div class="sys-row">
+            <span>Model File:</span>
+            <code>crop_disease_model.pth</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="system-card">
+        <div class="sys-header">
+          <h4><i class='bx bx-data'></i> Storage Information</h4>
+        </div>
+        <div class="sys-info">
+          <div class="sys-row">
+            <span>Users Data:</span>
+            <strong id="usersStorage">0 KB</strong>
+          </div>
+          <div class="sys-row">
+            <span>Scan History:</span>
+            <strong id="scansStorage">0 KB</strong>
+          </div>
+          <div class="sys-row">
+            <span>Total LocalStorage:</span>
+            <strong id="totalStorage">0 KB</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Test</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f0d;
+      color: white;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+      background: rgba(10,15,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(34,197,94,0.15);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .nav-brand b { color: #22c55e; }
+
+    .nav-btns {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-signin {
+      padding: 10px 24px;
+      border: 1px solid rgba(34,197,94,0.15);
+      background: transparent;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-signin:hover {
+      border-color: #22c55e;
+      color: #22c55e;
+      background: rgba(34,197,94,0.05);
+    }
+
+    .btn-signup {
+      padding: 10px 24px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-signup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(34,197,94,0.5);
+    }
+
+    .content {
+      margin-top: 100px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .test-info {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    .test-info h3 {
+      color: #22c55e;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 5px;
+    }
+
+    .status.success {
+      background: rgba(34,197,94,0.2);
+      color: #22c55e;
+    }
+
+    .status.error {
+      background: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <i class='bx bxs-leaf'></i>
+      <span>Krushi <b>AI Care</b></span>
+    </div>
+    <div class="nav-btns" id="navBtns">
+      <button class="btn-signin" id="signInBtn" onclick="alert('Sign In clicked!')">Sign In</button>
+      <button class="btn-signup" id="signUpBtn" onclick="alert('Sign Up clicked!')">Sign Up</button>
+      <button class="btn-signup" id="dashboardBtn" onclick="alert('Dashboard clicked!')" style="display:none;">Go to Dashboard</button>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="content">
+    <h1>🧪 Navbar Button Test</h1>
+    <p style="margin: 20px 0;">Check if Sign In and Sign Up buttons are visible in the navbar above</p>
+
+    <div class="test-info">
+      <h3>Button Status:</h3>
+      <div id="buttonStatus"></div>
+    </div>
+
+    <div class="test-info">
+      <h3>Session Status:</h3>
+      <div id="sessionStatus"></div>
+    </div>
+
+    <button class="btn-signup" onclick="toggleSession()" style="margin: 20px;">
+      Toggle Session (Login/Logout)
+    </button>
+  </div>
+
+  <script>
+    function checkButtons() {
+      const signInBtn = document.getElementById('signInBtn');
+      const signUpBtn = document.getElementById('signUpBtn');
+      const dashboardBtn = document.getElementById('dashboardBtn');
+      
+      const statusDiv = document.getElementById('buttonStatus');
+      
+      let html = '';
+      
+      if (signInBtn && window.getComputedStyle(signInBtn).display !== 'none') {
+        html += '<span class="status success">✓ Sign In Visible</span>';
+      } else {
+        html += '<span class="status error">✗ Sign In Hidden</span>';
+      }
+      
+      if (signUpBtn && window.getComputedStyle(signUpBtn).display !== 'none') {
+        html += '<span class="status success">✓ Sign Up Visible</span>';
+      } else {
+        html += '<span class="status error">✗ Sign Up Hidden</span>';
+      }
+      
+      if (dashboardBtn && window.getComputedStyle(dashboardBtn).display !== 'none') {
+        html += '<span class="status success">✓ Dashboard Visible</span>';
+      } else {
+        html += '<span class="status error">✗ Dashboard Hidden</span>';
+      }
+      
+      statusDiv.innerHTML = html;
+    }
+
+    function checkSession() {
+      const session = localStorage.getItem('kac_session');
+      const sessionDiv = document.getElementById('sessionStatus');
+      
+      if (session) {
+        const parsed = JSON.parse(session);
+        sessionDiv.innerHTML = `<span class="status success">✓ Logged In as ${parsed.name}</span>`;
+      } else {
+        sessionDiv.innerHTML = '<span class="status error">✗ Not Logged In</span>';
+      }
+    }
+
+    function toggleSession() {
+      const session = localStorage.getItem('kac_session');
+      
+      if (session) {
+        // Logout
+        localStorage.removeItem('kac_session');
+        document.getElementById('signInBtn').style.display = 'block';
+        document.getElementById('signUpBtn').style.display = 'block';
+        document.getElementById('dashboardBtn').style.display = 'none';
+      } else {
+        // Login
+        localStorage.setItem('kac_session', JSON.stringify({
+          email: 'demo@krishiaicare.com',
+          name: 'Demo User'
+        }));
+        document.getElementById('signInBtn').style.display = 'none';
+        document.getElementById('signUpBtn').style.display = 'none';
+        document.getElementById('dashboardBtn').style.display = 'block';
+      }
+      
+      checkButtons();
+      checkSession();
+    }
+
+    // Check on load
+    const session = JSON.parse(localStorage.getItem('kac_session') || 'null');
+    if (session) {
+      document.getElementById('signInBtn').style.display = 'none';
+      document.getElementById('signUpBtn').style.display = 'none';
+      document.getElementById('dashboardBtn').style.display = 'block';
+    }
+
+    checkButtons();
+    checkSession();
+  </script>
+</body>
+</html>

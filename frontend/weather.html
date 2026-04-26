@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather - Krushi AI Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <style>
+    .weather-main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .weather-search {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .weather-search input {
+      flex: 1;
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .weather-search input:focus {
+      border-color: var(--green);
+    }
+
+    .weather-search button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--green), var(--green-d));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .weather-search button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+    }
+
+    .weather-card {
+      background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.05));
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .weather-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .weather-location {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .weather-location i {
+      font-size: 2rem;
+      color: var(--green);
+    }
+
+    .weather-location h2 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .weather-location p {
+      color: var(--muted);
+      margin: 4px 0 0 0;
+    }
+
+    .weather-main-info {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .weather-icon-big {
+      width: 120px;
+      height: 120px;
+      background: rgba(34,197,94,0.15);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .weather-temp-main {
+      flex: 1;
+    }
+
+    .weather-temp {
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .weather-desc {
+      font-size: 1.2rem;
+      color: var(--text);
+      text-transform: capitalize;
+      margin-bottom: 8px;
+    }
+
+    .weather-feels {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .weather-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .weather-item i {
+      font-size: 2rem;
+      color: var(--green);
+    }
+
+    .weather-item-info {
+      flex: 1;
+    }
+
+    .weather-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .weather-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .forecast-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .forecast-section h3 {
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .forecast-card {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .forecast-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--green);
+    }
+
+    .forecast-day {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .forecast-icon {
+      font-size: 2.5rem;
+      margin: 8px 0;
+    }
+
+    .forecast-temp {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      margin: 8px 0;
+    }
+
+    .forecast-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: capitalize;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .loading i {
+      font-size: 3rem;
+      color: var(--green);
+      animation: spin 1s linear infinite;
+    }
+
+    .error-box {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: #ef4444;
+    }
+
+    .error-box i {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .farming-tips {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    .farming-tips h3 {
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green);
+    }
+
+    .tips-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tip-item {
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: start;
+      gap: 12px;
+    }
+
+    .tip-item i {
+      color: var(--green);
+      font-size: 1.5rem;
+      margin-top: 2px;
+    }
+
+    .tip-content h4 {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+    }
+
+    .tip-content p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="dash-body">
+
+<!-- BG -->
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="side-brand">
+    <div class="logo"><i class='bx bxs-leaf'></i></div>
+    <span>Krushi <b>AI Care</b></span>
+  </div>
+  
+  <nav class="side-nav">
+    <a href="dashboard.html" class="side-link">
+      <i class='bx bx-scan'></i> <span>Detect Disease</span>
+    </a>
+    <a href="dashboard.html" class="side-link">
+      <i class='bx bx-history'></i> <span>Scan History</span>
+    </a>
+    <a href="dashboard.html" class="side-link">
+      <i class='bx bxs-flask'></i> <span>Fertilizer Guide</span>
+    </a>
+    <a href="dashboard.html" class="side-link">
+      <i class='bx bxs-leaf'></i> <span>Supported Crops</span>
+    </a>
+    <a href="weather.html" class="side-link active">
+      <i class='bx bx-cloud'></i> <span>Weather</span>
+    </a>
+    <div class="side-divider"></div>
+    <a href="admin-login.html" class="side-link admin-link">
+      <i class='bx bx-shield'></i> <span>Admin Panel</span>
+    </a>
+  </nav>
+
+  <div class="side-user">
+    <div class="user-av" id="userAv">U</div>
+    <div class="user-info">
+      <strong id="userName">User</strong>
+      <span id="userEmail">user@email.com</span>
+    </div>
+    <button class="logout-btn" onclick="logout()" title="Logout">
+      <i class='bx bx-log-out'></i>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="dash-main">
+  
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <h2>Weather Forecast</h2>
+      <p>Real-time weather information for farming</p>
+    </div>
+    <div class="topbar-right">
+      <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class='bx bx-menu'></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="weather-main">
+    <!-- Search -->
+    <div class="weather-search">
+      <i class='bx bx-search' style="color: var(--muted); font-size: 1.5rem;"></i>
+      <input type="text" id="cityInput" placeholder="Enter city name (e.g., Mumbai, Pune, Delhi)" />
+      <button onclick="searchWeather()">
+        <i class='bx bx-search'></i>
+        Search
+      </button>
+      <button onclick="getCurrentLocation()" style="background: rgba(255,255,255,0.1);">
+        <i class='bx bx-current-location'></i>
+        Current Location
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading" style="display:none;">
+      <i class='bx bx-loader-alt bx-spin'></i>
+      <p>Loading weather data...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="errorBox" class="error-box" style="display:none;">
+      <i class='bx bx-error-circle'></i>
+      <p id="errorText"></p>
+    </div>
+
+    <!-- Weather Data -->
+    <div id="weatherData" style="display:none;">
+      <!-- Current Weather -->
+      <div class="weather-card">
+        <div class="weather-header">
+          <div class="weather-location">
+            <i class='bx bx-map'></i>
+            <div>
+              <h2 id="cityName">-</h2>
+              <p id="countryName">-</p>
+            </div>
+          </div>
+          <div style="text-align: right; color: var(--muted);">
+            <p id="currentDate">-</p>
+            <p id="currentTime">-</p>
+          </div>
+        </div>
+
+        <div class="weather-main-info">
+          <div class="weather-icon-big" id="weatherIcon">
+            ☀️
+          </div>
+          <div class="weather-temp-main">
+            <div class="weather-temp" id="temperature">--°C</div>
+            <div class="weather-desc" id="description">-</div>
+            <div class="weather-feels">Feels like <span id="feelsLike">--°C</span></div>
+          </div>
+        </div>
+
+        <div class="weather-grid">
+          <div class="weather-item">
+            <i class='bx bx-droplet'></i>
+            <div class="weather-item-info">
+              <div class="weather-label">Humidity</div>
+              <div class="weather-value" id="humidity">--%</div>
+            </div>
+          </div>
+          <div class="weather-item">
+            <i class='bx bx-wind'></i>
+            <div class="weather-item-info">
+              <div class="weather-label">Wind Speed</div>
+              <div class="weather-value" id="windSpeed">-- km/h</div>
+            </div>
+          </div>
+          <div class="weather-item">
+            <i class='bx bx-tachometer'></i>
+            <div class="weather-item-info">
+              <div class="weather-label">Pressure</div>
+              <div class="weather-value" id="pressure">-- hPa</div>
+            </div>
+          </div>
+          <div class="weather-item">
+            <i class='bx bx-show'></i>
+            <div class="weather-item-info">
+              <div class="weather-label">Visibility</div>
+              <div class="weather-value" id="visibility">-- km</div>
+            </div>
+          </div>
+          <div class="weather-item">
+            <i class='bx bx-sun'></i>
+            <div class="weather-item-info">
+              <div class="weather-label">UV Index</div>
+              <div class="weather-value" id="uvIndex">-</div>
+            </div>
+          </div>
+          <div class="weather-item">
+            <i class='bx bx-cloud-rain'></i>
+            <div class="weather-item-info">
+              <div class="weather-label">Precipitation</div>
+              <div class="weather-value" id="precipitation">-- mm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Farming Tips -->
+      <div class="farming-tips" id="farmingTips">
+        <h3><i class='bx bxs-leaf'></i> Farming Recommendations</h3>
+        <div class="tips-grid" id="tipsGrid"></div>
+      </div>
+
+      <!-- 5-Day Forecast -->
+      <div class="forecast-section">
+        <h3><i class='bx bx-calendar'></i> 5-Day Forecast</h3>
+        <div class="forecast-grid" id="forecastGrid"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Auth Guard
+  const session = JSON.parse(localStorage.getItem('kac_session') || 'null');
+  if (!session) {
+    window.location.href = 'auth.html';
+  }
+  document.getElementById('userName').textContent = session.name;
+  document.getElementById('userEmail').textContent = session.email;
+  document.getElementById('userAv').textContent = session.name.charAt(0).toUpperCase();
+
+  function logout() {
+    localStorage.removeItem('kac_session');
+    window.location.href = 'index.html';
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  // Weather API (OpenWeatherMap - Free API)
+  const API_KEY = ''; // Add your API key here or use demo mode
+  const API_BASE = 'https://api.openweathermap.org/data/2.5';
+
+  // Weather Icons
+  const weatherIcons = {
+    '01d': '☀️', '01n': '🌙',
+    '02d': '⛅', '02n': '☁️',
+    '03d': '☁️', '03n': '☁️',
+    '04d': '☁️', '04n': '☁️',
+    '09d': '🌧️', '09n': '🌧️',
+    '10d': '🌦️', '10n': '🌧️',
+    '11d': '⛈️', '11n': '⛈️',
+    '13d': '❄️', '13n': '❄️',
+    '50d': '🌫️', '50n': '🌫️'
+  };
+
+  // Load default city on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedCity = localStorage.getItem('weather_city') || 'Mumbai';
+    document.getElementById('cityInput').value = savedCity;
+    searchWeather();
+  });
+
+  async function searchWeather() {
+    const city = document.getElementById('cityInput').value.trim();
+    if (!city) {
+      showError('Please enter a city name');
+      return;
+    }
+
+    showLoading();
+    
+    try {
+      // Demo mode - using mock data
+      setTimeout(() => {
+        showDemoWeather(city);
+      }, 1000);
+      
+      // Save city
+      localStorage.setItem('weather_city', city);
+    } catch (error) {
+      showError('Failed to fetch weather data');
+    }
+  }
+
+  function showDemoWeather(city) {
+    hideLoading();
+    document.getElementById('weatherData').style.display = 'block';
+    
+    // Mock data
+    const temp = Math.floor(Math.random() * 15) + 20; // 20-35°C
+    const humidity = Math.floor(Math.random() * 30) + 50; // 50-80%
+    const windSpeed = Math.floor(Math.random() * 20) + 5; // 5-25 km/h
+    
+    document.getElementById('cityName').textContent = city;
+    document.getElementById('countryName').textContent = 'India';
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', { 
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+    });
+    document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('en-IN', {
+      hour: '2-digit', minute: '2-digit'
+    });
+    
+    document.getElementById('weatherIcon').textContent = '☀️';
+    document.getElementById('temperature').textContent = `${temp}°C`;
+    document.getElementById('description').textContent = 'Clear Sky';
+    document.getElementById('feelsLike').textContent = `${temp + 2}°C`;
+    document.getElementById('humidity').textContent = `${humidity}%`;
+    document.getElementById('windSpeed').textContent = `${windSpeed} km/h`;
+    document.getElementById('pressure').textContent = '1013 hPa';
+    document.getElementById('visibility').textContent = '10 km';
+    document.getElementById('uvIndex').textContent = '7 (High)';
+    document.getElementById('precipitation').textContent = '0 mm';
+    
+    // Generate farming tips
+    generateFarmingTips(temp, humidity, windSpeed);
+    
+    // Generate forecast
+    generateForecast();
+  }
+
+  function generateFarmingTips(temp, humidity, windSpeed) {
+    const tips = [];
+    
+    if (temp > 30) {
+      tips.push({
+        icon: 'bx-sun',
+        title: 'High Temperature Alert',
+        desc: 'Increase irrigation frequency. Provide shade for sensitive crops. Monitor for heat stress.'
+      });
+    }
+    
+    if (humidity > 70) {
+      tips.push({
+        icon: 'bx-droplet',
+        title: 'High Humidity',
+        desc: 'Watch for fungal diseases. Ensure good air circulation. Consider fungicide application.'
+      });
+    } else if (humidity < 40) {
+      tips.push({
+        icon: 'bx-water',
+        title: 'Low Humidity',
+        desc: 'Increase watering. Use mulch to retain moisture. Monitor for pest activity.'
+      });
+    }
+    
+    if (windSpeed > 15) {
+      tips.push({
+        icon: 'bx-wind',
+        title: 'Strong Winds',
+        desc: 'Secure tall plants. Delay spraying operations. Check for physical damage to crops.'
+      });
+    }
+    
+    tips.push({
+      icon: 'bx-leaf',
+      title: 'General Recommendation',
+      desc: 'Monitor crops daily. Maintain proper spacing. Keep fields weed-free for better growth.'
+    });
+    
+    const tipsGrid = document.getElementById('tipsGrid');
+    tipsGrid.innerHTML = tips.map(tip => `
+      <div class="tip-item">
+        <i class='bx ${tip.icon}'></i>
+        <div class="tip-content">
+          <h4>${tip.title}</h4>
+          <p>${tip.desc}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function generateForecast() {
+    const days = ['Tomorrow', 'Day 3', 'Day 4', 'Day 5', 'Day 6'];
+    const icons = ['⛅', '☀️', '🌧️', '⛅', '☀️'];
+    const temps = [28, 30, 25, 27, 29];
+    const descs = ['Partly Cloudy', 'Sunny', 'Light Rain', 'Partly Cloudy', 'Clear Sky'];
+    
+    const forecastGrid = document.getElementById('forecastGrid');
+    forecastGrid.innerHTML = days.map((day, i) => `
+      <div class="forecast-card">
+        <div class="forecast-day">${day}</div>
+        <div class="forecast-icon">${icons[i]}</div>
+        <div class="forecast-temp">${temps[i]}°C</div>
+        <div class="forecast-desc">${descs[i]}</div>
+      </div>
+    `).join('');
+  }
+
+  function getCurrentLocation() {
+    if (!navigator.geolocation) {
+      showError('Geolocation is not supported by your browser');
+      return;
+    }
+    
+    showLoading();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        
+        // Get city name from coordinates and show weather
+        getCityFromCoords(lat, lon);
+      },
+      (error) => {
+        hideLoading();
+        let errorMsg = 'Unable to get your location. ';
+        if (error.code === 1) {
+          errorMsg += 'Location permission denied. Please allow location access or enter city manually.';
+        } else if (error.code === 2) {
+          errorMsg += 'Location unavailable. Please enter city manually.';
+        } else {
+          errorMsg += 'Please enter city manually.';
+        }
+        showError(errorMsg);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
+  }
+
+  function getCityFromCoords(lat, lon) {
+    // Demo mode: Map coordinates to nearest major Indian city
+    const indianCities = [
+      { name: 'Mumbai', lat: 19.0760, lon: 72.8777 },
+      { name: 'Delhi', lat: 28.7041, lon: 77.1025 },
+      { name: 'Bangalore', lat: 12.9716, lon: 77.5946 },
+      { name: 'Pune', lat: 18.5204, lon: 73.8567 },
+      { name: 'Hyderabad', lat: 17.3850, lon: 78.4867 },
+      { name: 'Chennai', lat: 13.0827, lon: 80.2707 },
+      { name: 'Kolkata', lat: 22.5726, lon: 88.3639 },
+      { name: 'Ahmedabad', lat: 23.0225, lon: 72.5714 },
+      { name: 'Jaipur', lat: 26.9124, lon: 75.7873 },
+      { name: 'Lucknow', lat: 26.8467, lon: 80.9462 }
+    ];
+    
+    // Find nearest city
+    let nearestCity = indianCities[0];
+    let minDistance = getDistance(lat, lon, nearestCity.lat, nearestCity.lon);
+    
+    for (let city of indianCities) {
+      const distance = getDistance(lat, lon, city.lat, city.lon);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestCity = city;
+      }
+    }
+    
+    document.getElementById('cityInput').value = nearestCity.name;
+    searchWeather();
+  }
+
+  function getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  function showLoading() {
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('errorBox').style.display = 'none';
+    document.getElementById('weatherData').style.display = 'none';
+  }
+
+  function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+  }
+
+  function showError(message) {
+    hideLoading();
+    document.getElementById('errorText').textContent = message;
+    document.getElementById('errorBox').style.display = 'block';
+    document.getElementById('weatherData').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
